@@ -644,12 +644,13 @@
             const titleElement = document.createElement('div');
             titleElement.className = 'diagnosis-title';
             titleElement.textContent = '诊断结果';
-            resultBox.appendChild(titleElement);
 
             // 添加横线，调整到诊断结果文本上方
             const separator = document.createElement('div');
             separator.className = 'result-separator';
             resultBox.appendChild(separator);
+
+            resultBox.appendChild(titleElement);
 
             const resultText = document.createElement('p');
             resultText.className = `result-text ${color? `result-${color.replace(' ', '')}` : ''}`;
@@ -722,3 +723,8 @@
         }
 
         // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>   
