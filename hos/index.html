@@ -120,7 +120,7 @@
 
         .copyright {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 10px;
             font-size: 12px;
             color: #888;
             padding-bottom: 20px;
@@ -166,7 +166,7 @@
             width: 48%;
             padding: 12px;
             font-size: 16px;
-            margin: 30px auto 10px;
+            margin: 20px auto 10px;
             background-color: #007BFF;
             color: white;
             text-align: center;
@@ -208,6 +208,28 @@
             border-bottom: 1px solid #ccc;
             margin: 10px 0;
         }
+
+        .aml-types {
+            font-size: 14px;
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .aml-types-title {
+            color: #007BFF;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .aml-types-list {
+            color: #666;
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .aml-types-list li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
@@ -232,7 +254,7 @@
             <p>严格保护您的个人信息和筛查结果，确保您的隐私安全。</p>
         </div>
 
-        <button class="submit-button" onclick="startTest()">开始测试</button>
+        <button class="submit-button" onclick="startTest()">开始诊断</button>
     </div>
 
     <div class="container">
@@ -406,6 +428,21 @@
                 <tbody id="explanationBody">
                 </tbody>
             </table>
+            
+            <div class="aml-types">
+                <div class="aml-types-title">基于分化程度定义的AML</div>
+                <ul class="aml-types-list">
+                    <li>AML伴微分化型</li>
+                    <li>AML伴未成熟型</li>
+                    <li>AML伴成熟型</li>
+                    <li>急性嗜碱性粒细胞白血病</li>
+                    <li>急性粒单核细胞白血病</li>
+                    <li>急性单核细胞白血病</li>
+                    <li>急性红白血病</li>
+                    <li>急性巨核细胞白血病</li>
+                </ul>
+            </div>
+            
             <button id="restart-button" onclick="restartTest()">重新测试</button>
             <p class="copyright">Copyright © 2025 [宁夏回族自治区人民医院血液科]. All rights reserved</p>
         </div>
