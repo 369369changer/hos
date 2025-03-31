@@ -23,6 +23,7 @@
             text-align: center;
             margin-bottom: 10px;
             margin-top: 0;
+            color: #007BFF;
         }
 
         .question-container {
@@ -184,6 +185,8 @@
             color: #888;
             text-align: center;
             margin-top: 10px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
         }
 
         .feature {
@@ -354,7 +357,7 @@
 
         <!-- 问题7 -->
         <div class="question-container hidden" id="question7">
-            <h1>7. 是否伴有一下情况（F不参与多选）？</h1>
+            <h1>7. 是否伴有以下情况？</h1>
             <div class="vertical-options">
                 <label><input type="checkbox" name="q7a" value="A" onchange="handleQ7Selection()"> A. 年龄≥60岁</label>
                 <label><input type="checkbox" name="q7b" value="B" onchange="handleQ7Selection()"> B. WBC≥100×10^9/L</label>
@@ -395,14 +398,14 @@
         <div class="question-container hidden" id="question9">
             <h1>9. 是否伴有以下异常？</h1>
             <div class="vertical-options">
-                <label><input type="checkbox" name="q9a" value="A"> A. inv(16)(p13q22)或t(16;16)(p13;q22)/CBFB::MYH11</label>
-                <label><input type="checkbox" name="q9b" value="B"> B. t(8;21)(q22;q22)/RUNX1::RUNX1T1</label>
-                <label><input type="checkbox" name="q9c" value="C"> C. Bzip区域框内CEBPA突变</label>
-                <label><input type="checkbox" name="q9d" value="D"> D. NPM1突变且不伴有FLT3-ITD突变</label>
-                <label><input type="checkbox" name="q9e" value="E"> E. NPM1突变伴FLT3-ITD突变</label>
-                <label><input type="checkbox" name="q9f" value="F"> F. NPM1野生型伴FLT3-ITD突变</label>
-                <label><input type="checkbox" name="q9g" value="G"> G. t(9;11)(p21.3;q23.3)/MLLT3::KMT2A</label>
-                <label><input type="checkbox" name="q9h" value="H"> H. 除外以上的其他细胞遗传学和分子学异常</label>
+                <label><input type="checkbox" name="q9a" value="A" onchange="handleQ9Selection()"> A. inv(16)(p13q22)或t(16;16)(p13;q22)/CBFB::MYH11</label>
+                <label><input type="checkbox" name="q9b" value="B" onchange="handleQ9Selection()"> B. t(8;21)(q22;q22)/RUNX1::RUNX1T1</label>
+                <label><input type="checkbox" name="q9c" value="C" onchange="handleQ9Selection()"> C. Bzip区域框内CEBPA突变</label>
+                <label><input type="checkbox" name="q9d" value="D" onchange="handleQ9Selection()"> D. NPM1突变且不伴有FLT3-ITD突变</label>
+                <label><input type="checkbox" name="q9e" value="E" onchange="handleQ9Selection()"> E. NPM1突变伴FLT3-ITD突变</label>
+                <label><input type="checkbox" name="q9f" value="F" onchange="handleQ9Selection()"> F. NPM1野生型伴FLT3-ITD突变</label>
+                <label><input type="checkbox" name="q9g" value="G" onchange="handleQ9Selection()"> G. t(9;11)(p21.3;q23.3)/MLLT3::KMT2A</label>
+                <label><input type="checkbox" name="q9h" value="H" onchange="handleQ9Selection()"> H. 除外以上的其他细胞遗传学和分子学异常</label>
             </div>
             <div class="button-container">
                 <button type="button" class="nav-button" onclick="prevQuestion(9)">上一题</button>
@@ -417,6 +420,7 @@
                 <div class="result-separator"></div>
                 <div class="result-text" id="resultText"></div>
             </div>
+           
             <p class="note">此诊断结果仅供参考，具体以医生诊断结果为准</p>
             <table class="explanation-table">
                 <thead>
@@ -520,6 +524,41 @@
                 if (anyOtherChecked) {
                     q7f.checked = false;
                 }
+            }
+        }
+
+        // 处理第9题选择逻辑
+        function handleQ9Selection() {
+            const q9h = document.querySelector('input[name="q9h"]');
+            const abcdOptions = [
+                document.querySelector('input[name="q9a"]'),
+                document.querySelector('input[name="q9b"]'),
+                document.querySelector('input[name="q9c"]'),
+                document.querySelector('input[name="q9d"]')
+            ];
+            const efgOptions = [
+                document.querySelector('input[name="q9e"]'),
+                document.querySelector('input[name="q9f"]'),
+                document.querySelector('input[name="q9g"]')
+            ];
+            
+            // 检查是否选择了ABCD中的任何一个
+            const anyABCDChecked = abcdOptions.some(option => option.checked);
+            // 检查是否选择了EFG中的任何一个
+            const anyEFGChecked = efgOptions.some(option => option.checked);
+            
+            if (q9h.checked) {
+                // 如果选择了H，取消所有其他选项
+                abcdOptions.forEach(option => option.checked = false);
+                efgOptions.forEach(option => option.checked = false);
+            } else if (anyABCDChecked) {
+                // 如果选择了ABCD中的任何一个，取消EFG和H
+                efgOptions.forEach(option => option.checked = false);
+                q9h.checked = false;
+            } else if (anyEFGChecked) {
+                // 如果选择了EFG中的任何一个，取消ABCD和H
+                abcdOptions.forEach(option => option.checked = false);
+                q9h.checked = false;
             }
         }
 
@@ -666,7 +705,9 @@
                 let finalDiagnosis = q6Diagnosis;
                 if (abcdSelected &&!efgSelected &&!hSelected) {
                     finalDiagnosis += '<br>**预后良好组**';
-                } else if (efgSelected || hSelected) {
+                } else if (efgSelected &&!abcdSelected &&!hSelected) {
+                    finalDiagnosis += '<br>**预后中等组**';
+                } else if (hSelected &&!abcdSelected &&!efgSelected) {
                     finalDiagnosis += '<br>**预后中等组**';
                 }
 
@@ -746,25 +787,20 @@
             showQuestion('question1');
         }
 
-        // 重新测试
-        function restartTest() {
+      
+       // 重新测试
+function restartTest() {
             answers = {};
             q6Diagnosis = '';
             document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
             document.querySelectorAll('input[type="checkbox"]').forEach(input => input.checked = false);
+            document.querySelectorAll('.question-container').forEach(container => {
+                container.classList.add('hidden');
+            });
+            document.getElementById('homepage').classList.remove('hidden');
             document.getElementById('resultText').innerHTML = '';
-            document.getElementById('explanationBody').innerHTML = '';
-            showQuestion('homepage');
+            document.querySelector('#homepage button').style.display = 'block';
         }
-
-        // 初始化页面
-        function init() {
-            showQuestion('homepage');
-        }
-
-        // 页面加载时初始化
-        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
-
 </html>
