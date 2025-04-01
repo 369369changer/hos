@@ -469,7 +469,7 @@
         function checkAnswer(currentQuestion) {
             const questionKey = `q${currentQuestion}`;
             if (currentQuestion === 3) {
-                if (!answers[questionKey] &&!document.querySelector('input[name="q3"]:checked')) {
+                if (!answers[questionKey] && !document.querySelector('input[name="q3"]:checked')) {
                     alert(`请先回答第${currentQuestion}题！`);
                     return false;
                 }
@@ -485,7 +485,7 @@
                     alert(`请先回答第${currentQuestion}题！`);
                     return false;
                 }
-            } else if (!answers[questionKey] &&!document.querySelector(`input[name="${questionKey}"]:checked`)) {
+            } else if (!answers[questionKey] && !document.querySelector(`input[name="${questionKey}"]:checked`)) {
                 alert(`请先回答第${currentQuestion}题！`);
                 return false;
             }
@@ -565,7 +565,7 @@
         function handleQ8Selection() {
             answers.q8 = document.querySelector('input[name="q8"]:checked').value;
             // 如果第8题用户选择ABCDEFGHIJ选项中的任何一项或多项,诊断结果判定结果为：预后不良组
-            if (answers.q8!== 'K') {
+            if (answers.q8 !== 'K') {
                 const combinedDiagnosis = `**${q6Diagnosis}**<br>**预后不良组**`;
                 showResult(combinedDiagnosis, 'red');
             }
@@ -587,8 +587,8 @@
                 answers.q2 = document.querySelector('input[name="q2"]:checked').value;
             } else if (currentQuestion === 3) {
                 answers.q3 = document.querySelector('input[name="q3"]:checked').value;
-                answers.q3a = document.querySelector('input[name="q3a"]').checked? 'a' : null;
-                answers.q3b = document.querySelector('input[name="q3b"]').checked? 'b' : null;
+                answers.q3a = document.querySelector('input[name="q3a"]').checked ? 'a' : null;
+                answers.q3b = document.querySelector('input[name="q3b"]').checked ? 'b' : null;
             } else if (currentQuestion === 4) {
                 answers.q4 = document.querySelector('input[name="q4"]:checked').value;
 
@@ -639,8 +639,10 @@
                         q6Diagnosis = 'AML伴RBM15::MRTFA融合基因';
                         break;
                     case 'F':
+                        // 新增逻辑：如果第4题选择C，直接显示诊断结果
                         if (answers.q4 === 'C') {
-                            q6Diagnosis = 'AML伴BCR::ABL1融合基因';
+                            showResult('**AML伴BCR::ABL1融合基因**', 'blue');
+                            return;
                         } else {
                             q6Diagnosis = 'BCR::ABL1融合基因';
                         }
@@ -688,7 +690,7 @@
                 answers.q8 = document.querySelector('input[name="q8"]:checked')?.value || 'K';
 
                 // 如果第8题用户选择ABCDEFGHIJ选项中的任何一项或多项,诊断结果判定结果为：预后不良组
-                if (answers.q8!== 'K') {
+                if (answers.q8 !== 'K') {
                     const combinedDiagnosis = `**${q6Diagnosis}**<br>**预后不良组**`;
                     showResult(combinedDiagnosis, 'red');
                     return;
@@ -702,11 +704,11 @@
                 const hSelected = answers.q9.includes('H');
 
                 let finalDiagnosis = q6Diagnosis;
-                if (abcdSelected &&!efgSelected &&!hSelected) {
+                if (abcdSelected && !efgSelected && !hSelected) {
                     finalDiagnosis += '<br>**预后良好组**';
-                } else if (efgSelected &&!abcdSelected &&!hSelected) {
+                } else if (efgSelected && !abcdSelected && !hSelected) {
                     finalDiagnosis += '<br>**预后中等组**';
-                } else if (hSelected &&!abcdSelected &&!efgSelected) {
+                } else if (hSelected && !abcdSelected && !efgSelected) {
                     finalDiagnosis += '<br>**预后中等组**';
                 }
 
@@ -735,7 +737,7 @@
         function showResult(diagnosis, color = null) {
             const resultText = document.getElementById('resultText');
             resultText.innerHTML = diagnosis;
-            resultText.className = `result-text ${color? `result-${color.replace(' ', '')}` : ''}`;
+            resultText.className = `result-text ${color ? `result-${color.replace(' ', '')}` : ''}`;
 
             // 添加到解释表格
             const explanationBody = document.getElementById('explanationBody');
@@ -758,6 +760,9 @@
                     break;
                 case '建议进一步诊断':
                     explanation = '现有信息不足，需进一步检查明确病情。';
+                    break;
+                case 'AML伴BCR::ABL1融合基因':
+                    explanation = '一种特殊类型的急性髓系白血病，伴有BCR::ABL1融合基因，预后较差，需要针对性治疗。';
                     break;
                 case '预后良好组':
                     explanation = '病情相对乐观，治疗效果可能较好，但仍需积极治疗和定期复查。';
@@ -786,8 +791,8 @@
             showQuestion('question1');
         }
 
-      
-      function restartTest() {
+        // 重新开始测试
+        function restartTest() {
             // 重置所有核心变量
             answers = {};
             q6Diagnosis = '';
@@ -813,4 +818,4 @@
         }
     </script>
 </body>
-</html>   
+</html>
